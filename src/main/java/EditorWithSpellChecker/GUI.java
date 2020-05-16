@@ -5,6 +5,8 @@
  */
 package EditorWithSpellChecker;
 
+import javax.swing.JTextArea;
+
 /**
  *
  * @author Kerem
@@ -17,6 +19,9 @@ public class GUI extends javax.swing.JFrame {
     public GUI() {
         initComponents();
     }
+    public JTextArea getjTextArea() {return jTextArea;}
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,4 +139,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea;
     // End of variables declaration//GEN-END:variables
+
+   
 }
