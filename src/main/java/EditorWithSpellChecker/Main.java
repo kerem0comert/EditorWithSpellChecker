@@ -5,10 +5,8 @@
  */
 package EditorWithSpellChecker;
 
-/**
- *
- * @author Berkay
- */
+
+
 public class Main {
 
     /**
@@ -16,6 +14,11 @@ public class Main {
      */
     public static void main(String[] args) {
         System.out.println("test");
+        Thread spellCheckerThread = new Thread(new SpellCheckerThread("kerem"));
+        Thread guiThread = new Thread(new GuiThread());
+        spellCheckerThread.start();
+        
+       
     }
     
 }
