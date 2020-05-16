@@ -23,4 +23,5 @@ run{
 
 dependencies {
     testImplementation     'junit:junit:4.13'
+    implementation files('libs/jortho.jar')
 }
