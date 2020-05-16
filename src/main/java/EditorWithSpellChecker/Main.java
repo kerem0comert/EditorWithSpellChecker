@@ -32,7 +32,7 @@ public class Main {
         JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
         gui.getjTextArea().setComponentPopupMenu(popup);
 
-        gui.showUI();
+        gui.setVisible(true);
         
        
     }
