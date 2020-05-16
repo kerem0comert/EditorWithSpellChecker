@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+
+mainClassName = 'EditorWithSpellChecker.Main'
+
+repositories {
+    jcenter()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': mainClassName
+        )
+    }
+}
+
+run{
+    standardInput = System.in
+}
+
+dependencies {
+    testImplementation     'junit:junit:4.13'
+}
