@@ -28,17 +28,17 @@ public class GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextArea = new javax.swing.JTextArea();
         jButtonLoad = new javax.swing.JButton();
-        jButtonSave1.setFont(new Font("Arial", Font.PLAIN, 40));
-        jButtonSave1 = new javax.swing.JButton();
+        jButtonSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jTextArea.setColumns(20);
+        jTextArea.setRows(5);
+        jScrollPane1.setViewportView(jTextArea);
 
+        jButtonLoad.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
         jButtonLoad.setText("Load File");
         jButtonLoad.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         jButtonLoad.addActionListener(new java.awt.event.ActionListener() {
@@ -47,10 +47,11 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonSave1.setText("Save File");
-        jButtonSave1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSave.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
+        jButtonSave.setText("Save File");
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSave1ActionPerformed(evt);
+                jButtonSaveActionPerformed(evt);
             }
         });
 
@@ -63,9 +64,9 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 994, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonSave1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(61, 61, 61)
-                        .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButtonSave)
+                        .addGap(33, 33, 33)
+                        .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(43, 43, 43))
         );
         layout.setVerticalGroup(
@@ -74,7 +75,7 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap(80, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSave1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
@@ -87,9 +88,9 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
-    private void jButtonSave1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSave1ActionPerformed
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonSave1ActionPerformed
+    }//GEN-LAST:event_jButtonSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,8 +130,8 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonLoad;
-    private javax.swing.JButton jButtonSave1;
+    private javax.swing.JButton jButtonSave;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea;
     // End of variables declaration//GEN-END:variables
 }
