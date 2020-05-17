@@ -5,7 +5,10 @@
  */
 package EditorWithSpellChecker;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -119,7 +122,25 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showSaveDialog(this);
+        if(result == JFileChooser.APPROVE_OPTION){
+            File selectedFile = fileChooser.getSelectedFile();
+            String selectedFilePath = selectedFile.getAbsolutePath();
+            String textToSave = jTextArea.getText();
+            try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFilePath, false));
+            writer.append(textToSave);
+            writer.close();
+            JOptionPane.showMessageDialog(frame, "Successfully created!");   
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            
+        }   
+       
+        }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     /**

@@ -34,7 +34,10 @@ public class Main {
 
         gui.setVisible(true);
         
-       
+    }
+    
+    public static void saveFile(String textToSave){
+        
     }
     
 }
