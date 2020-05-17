@@ -13,27 +13,47 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Timer;
 import java.util.stream.Stream;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+
 
 /**
  *
  * @author Kerem
  */
 public class GUI extends javax.swing.JFrame {
+    private boolean isSavedOnce; //the flag to check if the current text that is in the
+                                 //JTextArea is saved or not
+    private String currentFilePath;
 
+    
     /**
      * Creates new form TextEditorGui
      */
     public GUI() {
         initComponents();
+        isSavedOnce = false;
+        currentFilePath = System.getProperty("user.home") + "/Desktop";
+
+    }
+
+    public boolean isSavedOnce() {
+        return isSavedOnce;
     }
 
     public JTextArea getjTextArea() {
         return jTextArea;
     }
-
+    
+    public String getCurrentFilePath() {
+        return currentFilePath;
+    }
+    
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,41 +125,49 @@ public class GUI extends javax.swing.JFrame {
 
     private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        System.out.println(currentFilePath);
+        fileChooser.setCurrentDirectory(new File(currentFilePath));
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             String selectedFilePath = selectedFile.getAbsolutePath();
             StringBuilder contentBuilder = new StringBuilder();
+            JFrame frame = new JFrame();  
             try (Stream<String> stream = Files.lines(Paths.get(selectedFilePath), 
                     StandardCharsets.UTF_8)){
                 stream.forEach(s -> contentBuilder.append(s).append("\n"));
                 jTextArea.setText(contentBuilder.toString());
+                isSavedOnce = true;
+                currentFilePath = selectedFilePath;
+                System.out.println(currentFilePath);
+                JOptionPane.showMessageDialog(frame, "File loaded succesfully"); 
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "Please select a .txt file!"); 
             }
+            System.gc();
         }
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setCurrentDirectory(new File(currentFilePath));
         int result = fileChooser.showSaveDialog(this);
         if(result == JFileChooser.APPROVE_OPTION){
             File selectedFile = fileChooser.getSelectedFile();
             String selectedFilePath = selectedFile.getAbsolutePath();
+            if(!selectedFilePath.contains(".txt")) selectedFilePath += ".txt";
             String textToSave = jTextArea.getText();
-            try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFilePath, false));
-            writer.append(textToSave);
-            writer.close();
-            JOptionPane.showMessageDialog(frame, "Successfully created!");   
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            
-        }   
-       
+            JFrame frame = new JFrame();  
+            if(Main.saveFile(textToSave, selectedFilePath)){      
+                JOptionPane.showMessageDialog(frame, "Successfully created!"); 
+                isSavedOnce = true;
+                currentFilePath = selectedFilePath;
+
+            }
+            else 
+                JOptionPane.showMessageDialog(frame, "Error saving file!"); 
+            System.gc();
         }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
@@ -177,6 +205,9 @@ public class GUI extends javax.swing.JFrame {
                 new GUI().setVisible(true);
             }
         });
+      
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

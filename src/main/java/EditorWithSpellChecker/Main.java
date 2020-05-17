@@ -8,18 +8,24 @@ package EditorWithSpellChecker;
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
 import com.inet.jortho.SpellCheckerOptions;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Timer;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 
 
-public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
+public class Main {
+    
+    public static Timer timer;
+    
+
     public static void main(String[] args) {
         GUI gui = new GUI();
-
         SpellChecker.setUserDictionaryProvider(new FileUserDictionary());
 
         SpellChecker.registerDictionaries(Main.class.getResource("/dictionary"), "en");
@@ -28,16 +34,26 @@ public class Main {
         SpellCheckerOptions sco=new SpellCheckerOptions();
         sco.setCaseSensitive(true);
         sco.setSuggestionsLimitMenu(15);
-
         JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
-        gui.getjTextArea().setComponentPopupMenu(popup);
-
+        gui.getjTextArea().setComponentPopupMenu(popup); 
         gui.setVisible(true);
-        
+        timer = new Timer();
+        timer.schedule(new AutoSaveThread(gui), 0, 2000);
+                           
     }
     
-    public static void saveFile(String textToSave){
-        
+    
+    public static boolean saveFile(String textToSave, String filePath){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
+            writer.append(textToSave);
+            writer.close();    
+            return true;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }   
     }
     
 }
