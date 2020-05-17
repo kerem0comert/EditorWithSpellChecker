@@ -12,7 +12,6 @@ import java.util.TimerTask;
  * @author Kerem
  */
 public class AutoSaveThread extends TimerTask{
-    private String filePath, textToSave;
     private GUI gui;
     
     AutoSaveThread(GUI gui){

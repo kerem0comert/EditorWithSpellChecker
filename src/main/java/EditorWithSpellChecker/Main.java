@@ -8,6 +8,8 @@ package EditorWithSpellChecker;
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
 import com.inet.jortho.SpellCheckerOptions;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,12 +39,35 @@ public class Main {
         JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
         gui.getjTextArea().setComponentPopupMenu(popup); 
         gui.setVisible(true);
+        gui.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
+                + " exiting?");
+        
+        switch (selection) {
+            case 0:
+
+                if(gui.isSavedOnce()) 
+                    gui.saveCurrentText(false); //the behaviour is not "Save as" so send false
+                else 
+                    gui.saveCurrentText(true); //user has to "Save As" at least once
+                e.getWindow().dispose();
+                break;
+            case 1:
+                e.getWindow().dispose();
+        }
+                
+            }
+        });
         timer = new Timer();
-        timer.schedule(new AutoSaveThread(gui), 0, 2000);
+        timer.schedule(new AutoSaveThread(gui), 0, 2000); //TODO MAKE THIS 120 SECSS
                            
     }
     
-    
+
     public static boolean saveFile(String textToSave, String filePath){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
@@ -50,8 +75,7 @@ public class Main {
             writer.close();    
             return true;
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (Exception e) {
             return false;
         }   
     }
