@@ -5,20 +5,13 @@
  */
 package EditorWithSpellChecker;
 
-import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Timer;
 import java.util.stream.Stream;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
@@ -37,6 +30,7 @@ public class GUI extends javax.swing.JFrame   {
     private boolean isSavedOnce; //the flag to check if the current text that is in the
     //JTextArea is saved or not
     private String currentFilePath;
+    private boolean isTextChaged;
 
     /**
      * Creates new form TextEditorGui
@@ -44,6 +38,7 @@ public class GUI extends javax.swing.JFrame   {
     public GUI() {
         initComponents();
         isSavedOnce = false;
+        isTextChaged = false;
         currentFilePath = System.getProperty("user.home") + "/Desktop";
 
     }
@@ -53,7 +48,7 @@ public class GUI extends javax.swing.JFrame   {
     }
 
     public JTextArea getjTextArea() {
-        return jTextArea;
+        return jTextAreaMain;
     }
 
     public String getCurrentFilePath() {
@@ -70,22 +65,30 @@ public class GUI extends javax.swing.JFrame   {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea = new javax.swing.JTextArea();
+        jTextAreaMain = new javax.swing.JTextArea();
         jButtonLoad = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
         jButtonNew = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
 
-        jTextArea.setColumns(20);
-        jTextArea.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextArea.setRows(5);
-        jScrollPane1.setViewportView(jTextArea);
+        jTextAreaMain.setColumns(20);
+        jTextAreaMain.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextAreaMain.setRows(5);
+        jTextAreaMain.setText("Use one of the above buttons first.");
+        jTextAreaMain.setEnabled(false);
+        jTextAreaMain.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextAreaMainKeyTyped(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTextAreaMain);
 
         jButtonLoad.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
         jButtonLoad.setText("Load File");
@@ -98,6 +101,7 @@ public class GUI extends javax.swing.JFrame   {
 
         jButtonSave.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
         jButtonSave.setText("Save File");
+        jButtonSave.setEnabled(false);
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
@@ -148,6 +152,27 @@ public class GUI extends javax.swing.JFrame   {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
+
+        if (isTextChaged) {
+            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
+                    + " loading a file?");
+
+            switch (selection) {
+                case 0:
+                    if (isSavedOnce) {
+                        saveCurrentText(false); //the behaviour is not "Save as" so send false
+                    } else {
+                        saveCurrentText(true); //user has to "Save As" at least once
+                    }
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    return;
+
+            }
+        }
+        
         JFileChooser fileChooser = new JFileChooser();
         System.out.println(currentFilePath);
         fileChooser.setCurrentDirectory(new File(currentFilePath));
@@ -161,11 +186,14 @@ public class GUI extends javax.swing.JFrame   {
                 Stream<String> stream = Files.lines(Paths.get(selectedFilePath),
                         StandardCharsets.UTF_8);
                 stream.forEach(s -> contentBuilder.append(s).append("\n"));
-                jTextArea.setText(contentBuilder.toString());
+                jTextAreaMain.setText(contentBuilder.toString());
+                isTextChaged = false;
                 isSavedOnce = true;
                 currentFilePath = selectedFilePath;
                 System.out.println(currentFilePath);
                 JOptionPane.showMessageDialog(this, "File loaded succesfully");
+                jTextAreaMain.setEnabled(true);
+                jButtonSave.setEnabled(true);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Please select a .txt file!");
             }
@@ -174,61 +202,73 @@ public class GUI extends javax.swing.JFrame   {
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        
         saveCurrentText(true); //We want to perform a "Save as" operation, so send true
+        
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void jButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewActionPerformed
-        //JOptionPane.showConfirmDialog(this, "Would you like to save the current file"
-        //      + "before opening a new one?", "Saving", 0);
-        int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
-                + " opening a new file?");
         
-        switch (selection) {
-            case 0:
-                if(isSavedOnce) 
-                    saveCurrentText(false); //the behaviour is not "Save as" so send false
-                else 
-                    saveCurrentText(true); //user has to "Save As" at least once
-                break;
-            case 1:
-                break;
-            default:
-                return;
+        if (isTextChaged) {
+            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
+                    + " opening a new file?");
+
+            switch (selection) {
+                case 0:
+                    if (isSavedOnce) {
+                        saveCurrentText(false); //the behaviour is not "Save as" so send false
+                    } else {
+                        saveCurrentText(true); //user has to "Save As" at least once
+                    }
+                    break;
+                case 1:
+                    break;
+
+            }
         }
 
-        jTextArea.setText("");
+
+        jTextAreaMain.setText("");
         isSavedOnce = false;
+        isTextChaged = false;
         currentFilePath = System.getProperty("user.home") + "/Desktop";
+        jTextAreaMain.setEnabled(true);
+        jButtonSave.setEnabled(true);
         JOptionPane.showMessageDialog(this, "New file created.");
     }//GEN-LAST:event_jButtonNewActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
-                + " exiting?");
-        
-        boolean close;
+        if (isTextChaged) {
+            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
+                    + " exiting?");
 
-        switch (selection) {
-            case 0:
-                if (isSavedOnce())
-                    close = saveCurrentText(false); //the behaviour is not "Save as" so send false
-                else
-                    close = saveCurrentText(true); //user has to "Save As" at least once
-                
-                if (close)
+            boolean close;
+
+            switch (selection) {
+                case 0:
+                    if (isSavedOnce()) {
+                        close = saveCurrentText(false); //the behaviour is not "Save as" so send false
+                    } else {
+                        close = saveCurrentText(true); //user has to "Save As" at least once
+                    }
+                    if (close) {
+                        System.exit(0);
+                    }
+                    break;
+                case 1:
                     System.exit(0);
-                break;
-            case 1:
-                System.exit(0);
-            case 2:
-                
-        }
+                case 2:
+            }
+        } else
+            System.exit(0);
     }//GEN-LAST:event_formWindowClosing
+
+    private void jTextAreaMainKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaMainKeyTyped
+        isTextChaged = true;
+    }//GEN-LAST:event_jTextAreaMainKeyTyped
 
     public boolean saveCurrentText(boolean isSaveAs) {
 
-        String textToSave = jTextArea.getText();
+        String textToSave = jTextAreaMain.getText();
         if (isSaveAs) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(currentFilePath));
@@ -241,6 +281,7 @@ public class GUI extends javax.swing.JFrame   {
                 }
                 if (Main.saveFile(textToSave, selectedFilePath)) {
                     JOptionPane.showMessageDialog(this, "Successfully saved!");
+                    isTextChaged = false;
                     isSavedOnce = true;
                     currentFilePath = selectedFilePath;
                     return true;
@@ -253,6 +294,7 @@ public class GUI extends javax.swing.JFrame   {
         } else {
             if (Main.saveFile(textToSave, currentFilePath)) {
                 JOptionPane.showMessageDialog(this, "Successfully saved!");
+                isTextChaged = false;
                 isSavedOnce = false; //this time the new file is opened so the currently
                                      //open file is changed
                 return true;
@@ -273,7 +315,7 @@ public class GUI extends javax.swing.JFrame   {
     private javax.swing.JButton jButtonNew;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea;
+    private javax.swing.JTextArea jTextAreaMain;
     // End of variables declaration//GEN-END:variables
 
 

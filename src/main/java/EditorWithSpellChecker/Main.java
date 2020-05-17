@@ -8,14 +8,9 @@ package EditorWithSpellChecker;
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
 import com.inet.jortho.SpellCheckerOptions;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Timer;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 
@@ -39,8 +34,8 @@ public class Main {
         JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
         gui.getjTextArea().setComponentPopupMenu(popup); 
         gui.setVisible(true);
-        timer = new Timer();
-        timer.schedule(new AutoSaveThread(gui), 0, 2000); //TODO MAKE THIS 120 SECSS
+//        timer = new Timer();
+//        timer.schedule(new AutoSaveThread(gui), 0, 2000); //TODO MAKE THIS 120 SECSS
                            
     }
     
