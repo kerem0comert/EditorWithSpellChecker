@@ -75,7 +75,7 @@ public class GUI extends javax.swing.JFrame   {
         jButtonSave = new javax.swing.JButton();
         jButtonNew = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -207,21 +207,26 @@ public class GUI extends javax.swing.JFrame   {
         int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
                 + " exiting?");
         
+        boolean close;
+
         switch (selection) {
             case 0:
-
-                if(this.isSavedOnce()) 
-                    this.saveCurrentText(false); //the behaviour is not "Save as" so send false
-                else 
-                    this.saveCurrentText(true); //user has to "Save As" at least once
-                evt.getWindow().dispose();
+                if (isSavedOnce())
+                    close = saveCurrentText(false); //the behaviour is not "Save as" so send false
+                else
+                    close = saveCurrentText(true); //user has to "Save As" at least once
+                
+                if (close)
+                    System.exit(0);
                 break;
             case 1:
-                evt.getWindow().dispose();
+                System.exit(0);
+            case 2:
+                
         }
     }//GEN-LAST:event_formWindowClosing
 
-    public void saveCurrentText(boolean isSaveAs) {
+    public boolean saveCurrentText(boolean isSaveAs) {
 
         String textToSave = jTextArea.getText();
         if (isSaveAs) {
@@ -238,8 +243,10 @@ public class GUI extends javax.swing.JFrame   {
                     JOptionPane.showMessageDialog(this, "Successfully saved!");
                     isSavedOnce = true;
                     currentFilePath = selectedFilePath;
+                    return true;
                 } else {
                     JOptionPane.showMessageDialog(this, "Error saving file!");
+                    return false;
                 }
 
             }
@@ -248,11 +255,14 @@ public class GUI extends javax.swing.JFrame   {
                 JOptionPane.showMessageDialog(this, "Successfully saved!");
                 isSavedOnce = false; //this time the new file is opened so the currently
                                      //open file is changed
+                return true;
             } else {
                 JOptionPane.showMessageDialog(this, "Error saving file!");
+                return false;
             }
         }
-
+        
+        return false;
     }
 
     //when the user clicks on the close button of the whole frame
