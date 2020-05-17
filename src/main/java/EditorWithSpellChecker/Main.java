@@ -39,29 +39,6 @@ public class Main {
         JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
         gui.getjTextArea().setComponentPopupMenu(popup); 
         gui.setVisible(true);
-        gui.addWindowListener(new WindowAdapter()
-        {
-            @Override
-            public void windowClosing(WindowEvent e)
-            {
-                int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
-                + " exiting?");
-        
-        switch (selection) {
-            case 0:
-
-                if(gui.isSavedOnce()) 
-                    gui.saveCurrentText(false); //the behaviour is not "Save as" so send false
-                else 
-                    gui.saveCurrentText(true); //user has to "Save As" at least once
-                e.getWindow().dispose();
-                break;
-            case 1:
-                e.getWindow().dispose();
-        }
-                
-            }
-        });
         timer = new Timer();
         timer.schedule(new AutoSaveThread(gui), 0, 2000); //TODO MAKE THIS 120 SECSS
                            

@@ -76,6 +76,11 @@ public class GUI extends javax.swing.JFrame   {
         jButtonNew = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jTextArea.setColumns(20);
         jTextArea.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -197,6 +202,24 @@ public class GUI extends javax.swing.JFrame   {
         currentFilePath = System.getProperty("user.home") + "/Desktop";
         JOptionPane.showMessageDialog(this, "New file created.");
     }//GEN-LAST:event_jButtonNewActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
+                + " exiting?");
+        
+        switch (selection) {
+            case 0:
+
+                if(this.isSavedOnce()) 
+                    this.saveCurrentText(false); //the behaviour is not "Save as" so send false
+                else 
+                    this.saveCurrentText(true); //user has to "Save As" at least once
+                evt.getWindow().dispose();
+                break;
+            case 1:
+                evt.getWindow().dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     public void saveCurrentText(boolean isSaveAs) {
 
