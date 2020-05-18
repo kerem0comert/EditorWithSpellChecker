@@ -2,7 +2,13 @@ package EditorWithSpellChecker;
 
 public class AutoSaveJob extends java.util.Timer {
     
+    private Main gui;
+    
     public AutoSaveJob(Main gui){
+        this.gui = gui;
+    }
+    
+    public void start(){
         schedule(new AutoSaveThread(gui), 0, 120000);
     }
 
@@ -16,9 +22,9 @@ public class AutoSaveJob extends java.util.Timer {
 
         @Override
         public void run() {
-            if (gui.isSavedOnce()) {
+            if (gui.isSavedOnce) {
                 System.out.println("Saving...");
-                Main.saveFile(gui.getjTextArea().getText(), gui.getCurrentFilePath());
+                gui.saveFile();
             }
 
         }

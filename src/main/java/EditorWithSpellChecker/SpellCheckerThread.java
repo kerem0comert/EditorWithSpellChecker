@@ -5,23 +5,34 @@
  */
 package EditorWithSpellChecker;
 
+import com.inet.jortho.FileUserDictionary;
+import com.inet.jortho.SpellChecker;
+import com.inet.jortho.SpellCheckerOptions;
+import javax.swing.JPopupMenu;
+
 /**
  *
  * @author Kerem
  */
 public class SpellCheckerThread implements Runnable{
-    private String name;
+    private Main gui;
     
-    public SpellCheckerThread(String name) {
-        this.name = name;
-        
+    public SpellCheckerThread(Main gui) {
+        this.gui = gui;  
     }
-    
-   
+
     @Override
     public void run() {
-        System.out.println("EditorWithSpellChecker.SpellCheckerThread.run()");
-        System.err.println(this.name);
+        SpellChecker.setUserDictionaryProvider(new FileUserDictionary());
+
+        SpellChecker.registerDictionaries(Main.class.getResource("/dictionary"), "en");
+        SpellChecker.register(gui.getjTextArea());
+
+        SpellCheckerOptions sco = new SpellCheckerOptions();
+        sco.setCaseSensitive(true);
+        sco.setSuggestionsLimitMenu(15);
+        JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
+        gui.getjTextArea().setComponentPopupMenu(popup);
     }
     
 }
