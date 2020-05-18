@@ -8,12 +8,13 @@ public class AutoSaveJob extends java.util.Timer {
 
     private class AutoSaveThread extends java.util.TimerTask {
 
-        private GUI gui;
+        private final GUI gui;
 
         AutoSaveThread(GUI gui) {
             this.gui = gui;
         }
 
+        @Override
         public void run() {
             if (gui.isSavedOnce()) {
                 System.out.println("Saving...");
