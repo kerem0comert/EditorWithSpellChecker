@@ -3,15 +3,30 @@ package EditorWithSpellChecker;
 import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class Main extends javax.swing.JFrame {
 
@@ -19,28 +34,67 @@ public class Main extends javax.swing.JFrame {
     public synchronized void addWindowListener(WindowListener l) {
         super.addWindowListener(l);
     }
-    ;
     
     public boolean isSavedOnce; //the flag to check if the current text that is in the
     //JTextArea is saved or not
     public String currentFilePath;
     public String backupFilePath;
+    public String backupFileListPath;
     public boolean isTextChaged;
+    public Map<String, LinkedList<String>> backupFileList;
 
     public Main() {
         initComponents();
         isSavedOnce = false;
         isTextChaged = false;
-        currentFilePath = System.getProperty("user.home") + "/Desktop";
-        backupFilePath = System.getProperty("user.home") + "/backup";
+        currentFilePath = System.getProperty("user.home") + "\\Desktop";
+        backupFilePath = System.getProperty("user.dir") + "\\backup\\";
+        backupFileListPath = System.getProperty("user.dir") + "\\backup.map";
+        try {
+            backupFileList = (Map<String, LinkedList<String>>)(new ObjectInputStream(new FileInputStream(backupFileListPath))).readObject();
+        } catch (Exception ex) {
+            backupFileList = new HashMap<>();
+        }
+        (new File(backupFilePath)).mkdirs();
     }
     
     public JTextArea getjTextArea() {
         return jTextAreaMain;
     }
 
+    public void backup() throws FileNotFoundException, IOException{
+        File source = new File(currentFilePath);
+        File target = new File(backupFilePath + source.getName() + ".backup-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyymmddhhmmss")));
+        
+        LinkedList<String> fileList = null;
+        
+        for (String s : backupFileList.keySet())
+            if (s.equals(currentFilePath)) {
+                fileList = backupFileList.get(s);
+                break;
+            }
+        
+        if (fileList == null)
+        {
+            fileList = new LinkedList<>();
+            backupFileList.put(currentFilePath, fileList);
+        }
+
+        try {
+            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            fileList.add(target.toPath().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        (new ObjectOutputStream(new FileOutputStream(backupFileListPath))).writeObject(backupFileList);
+        
+        System.out.println("");
+    }
+    
     public boolean saveFile() {
         try {
+            backup();
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentFilePath, false))) {
                 writer.append(jTextAreaMain.getText());
             }

@@ -1,4 +1,6 @@
 /build/
+/backup/
 .gradle
 *.obj
 *.src
+*.map
