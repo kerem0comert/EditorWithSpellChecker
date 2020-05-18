@@ -2,15 +2,15 @@ package EditorWithSpellChecker;
 
 public class AutoSaveJob extends java.util.Timer {
     
-    public AutoSaveJob(GUI gui){
+    public AutoSaveJob(Main gui){
         schedule(new AutoSaveThread(gui), 0, 120000);
     }
 
     private class AutoSaveThread extends java.util.TimerTask {
 
-        private final GUI gui;
+        private final Main gui;
 
-        AutoSaveThread(GUI gui) {
+        AutoSaveThread(Main gui) {
             this.gui = gui;
         }
 
