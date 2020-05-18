@@ -34,8 +34,8 @@ public class Main {
         JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
         gui.getjTextArea().setComponentPopupMenu(popup); 
         gui.setVisible(true);
-//        timer = new Timer();
-//        timer.schedule(new AutoSaveThread(gui), 0, 2000); //TODO MAKE THIS 120 SECSS
+        
+        AutoSaveJob autoSaveJob = new AutoSaveJob(gui); //it runs automatically
                            
     }
     
