@@ -178,6 +178,7 @@ public class Main extends javax.swing.JFrame {
         jButtonLoad = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
         jButtonNew = new javax.swing.JButton();
+        jButtonSaveAs = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("METUSoft Word");
@@ -201,7 +202,7 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextAreaMain);
 
         jButtonLoad.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
-        jButtonLoad.setText("Load File");
+        jButtonLoad.setText("Load");
         jButtonLoad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLoadActionPerformed(evt);
@@ -209,7 +210,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         jButtonSave.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
-        jButtonSave.setText("Save File");
+        jButtonSave.setText("Save");
         jButtonSave.setEnabled(false);
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -218,10 +219,19 @@ public class Main extends javax.swing.JFrame {
         });
 
         jButtonNew.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
-        jButtonNew.setText("New File");
+        jButtonNew.setText("New");
         jButtonNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNewActionPerformed(evt);
+            }
+        });
+
+        jButtonSaveAs.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
+        jButtonSaveAs.setText("Save As");
+        jButtonSaveAs.setEnabled(false);
+        jButtonSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveAsActionPerformed(evt);
             }
         });
 
@@ -233,10 +243,12 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonSave)
-                        .addGap(29, 29, 29)
+                        .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(jButtonSaveAs, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonNew, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -250,7 +262,8 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonNew, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonNew, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSaveAs, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
@@ -292,6 +305,7 @@ public class Main extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "File loaded succesfully");
                 jTextAreaMain.setEnabled(true);
                 jButtonSave.setEnabled(true);
+                jButtonSaveAs.setEnabled(true);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Please select a .txt file!");
             }
@@ -326,6 +340,7 @@ public class Main extends javax.swing.JFrame {
         currentFilePath = System.getProperty("user.home") + "/Desktop";
         jTextAreaMain.setEnabled(true);
         jButtonSave.setEnabled(true);
+        jButtonSaveAs.setEnabled(true);
         JOptionPane.showMessageDialog(this, "New file created.");
     }//GEN-LAST:event_jButtonNewActionPerformed
 
@@ -355,10 +370,15 @@ public class Main extends javax.swing.JFrame {
         isTextChaged = true;
     }//GEN-LAST:event_jTextAreaMainKeyTyped
 
+    private void jButtonSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveAsActionPerformed
+        saveCurrentText(true);
+    }//GEN-LAST:event_jButtonSaveAsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonLoad;
     private javax.swing.JButton jButtonNew;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JButton jButtonSaveAs;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaMain;
     // End of variables declaration//GEN-END:variables
