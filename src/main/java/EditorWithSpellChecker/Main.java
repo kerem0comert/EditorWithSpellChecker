@@ -66,7 +66,7 @@ public class Main extends javax.swing.JFrame {
         return jTextAreaMain;
     }
 
-    public void backup() throws FileNotFoundException, IOException{
+    public void backup() throws IOException {
         File source = new File(currentFilePath);
         File target = new File(backupFilePath + source.getName() + ".backup-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyymmddhhmmss")));
         
@@ -84,26 +84,25 @@ public class Main extends javax.swing.JFrame {
             backupFileList.put(currentFilePath, fileList);
         }
 
-        try {
-            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            fileList.add(target.toPath().toString());
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        fileList.add(target.toPath().toString());
+
         
         (new ObjectOutputStream(new FileOutputStream(backupFileListPath))).writeObject(backupFileList);
-        
-        System.out.println("");
     }
     
     public boolean saveFile() {
         try {
             backup();
+        } catch (IOException ex) {
+        }
+        
+        try {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentFilePath, false))) {
                 writer.append(jTextAreaMain.getText());
             }
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
     }
