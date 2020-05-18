@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 
 public class Main extends javax.swing.JFrame {
 
@@ -56,6 +58,8 @@ public class Main extends javax.swing.JFrame {
             backupFileList = new HashMap<>();
         }
         (new File(backupFilePath)).mkdirs();
+        setLocationRelativeTo(null);
+        
     }
     
     public JTextArea getjTextArea() {
@@ -110,7 +114,31 @@ public class Main extends javax.swing.JFrame {
         stream.forEach(s -> contentBuilder.append(s).append("\n"));
 
         return contentBuilder.toString();
+    }
+    
+    public void loadBackupFile(String fileName) {
+        LinkedList<String> fileList = null;
 
+        for (String s : backupFileList.keySet()) {
+            if (s.equals(currentFilePath)) {
+                fileList = backupFileList.get(s);
+                break;
+            }
+        }
+        
+        String fullFilePath = null;
+        
+        for (String s : fileList) {
+            if (s.contains(fileName)) {
+                fullFilePath = s;
+            }
+        }
+        
+        try {
+            jTextAreaMain.setText(loadFile(fullFilePath));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error while loading file!");
+        }
     }
 
     public boolean saveCurrentText(boolean isSaveAs) {
@@ -151,6 +179,13 @@ public class Main extends javax.swing.JFrame {
         return false;
     }
 
+    public void enableButtons() {
+        jTextAreaMain.setEnabled(true);
+        jButtonSave.setEnabled(true);
+        jButtonSaveAs.setEnabled(true);
+        jButtonShowFileBackups.setEnabled(true);
+    }
+
     public static void main(String[] args) {
         Main gui = new Main();
 
@@ -179,6 +214,7 @@ public class Main extends javax.swing.JFrame {
         jButtonSave = new javax.swing.JButton();
         jButtonNew = new javax.swing.JButton();
         jButtonSaveAs = new javax.swing.JButton();
+        jButtonShowFileBackups = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("METUSoft Word");
@@ -235,36 +271,48 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jButtonShowFileBackups.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
+        jButtonShowFileBackups.setText("File Backups");
+        jButtonShowFileBackups.setEnabled(false);
+        jButtonShowFileBackups.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonShowFileBackupsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 994, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(jButtonSaveAs, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonNew, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonNew, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 994, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43))))
+                        .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonSaveAs, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonShowFileBackups, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonShowFileBackups, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonNew, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSaveAs, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
@@ -275,8 +323,7 @@ public class Main extends javax.swing.JFrame {
     private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
 
         if (isTextChaged) {
-            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
-                    + " loading a file?");
+            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before loading a file?");
 
             switch (selection) {
                 case 0:
@@ -303,9 +350,7 @@ public class Main extends javax.swing.JFrame {
                 isSavedOnce = true;
                 currentFilePath = selectedFilePath;
                 JOptionPane.showMessageDialog(this, "File loaded succesfully");
-                jTextAreaMain.setEnabled(true);
-                jButtonSave.setEnabled(true);
-                jButtonSaveAs.setEnabled(true);
+                enableButtons();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Please select a .txt file!");
             }
@@ -314,15 +359,13 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        saveCurrentText(!isSavedOnce); //We want to perform a "Save as" operation, so send true
-
+        saveCurrentText(!isSavedOnce);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void jButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewActionPerformed
 
         if (isTextChaged) {
-            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
-                    + " opening a new file?");
+            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before opening a new file?");
 
             switch (selection) {
                 case 0:
@@ -338,16 +381,13 @@ public class Main extends javax.swing.JFrame {
         isSavedOnce = false;
         isTextChaged = false;
         currentFilePath = System.getProperty("user.home") + "/Desktop";
-        jTextAreaMain.setEnabled(true);
-        jButtonSave.setEnabled(true);
-        jButtonSaveAs.setEnabled(true);
+        enableButtons();
         JOptionPane.showMessageDialog(this, "New file created.");
     }//GEN-LAST:event_jButtonNewActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if (isTextChaged) {
-            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before"
-                    + " exiting?");
+            int selection = JOptionPane.showConfirmDialog(null, "Would you like to save before exit?");
 
             boolean close;
 
@@ -374,11 +414,39 @@ public class Main extends javax.swing.JFrame {
         saveCurrentText(true);
     }//GEN-LAST:event_jButtonSaveAsActionPerformed
 
+    private void jButtonShowFileBackupsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonShowFileBackupsActionPerformed
+        
+
+        LinkedList<String> fileList = null;
+
+        for (String s : backupFileList.keySet()) {
+            if (s.equals(currentFilePath)) {
+                fileList = backupFileList.get(s);
+                break;
+            }
+        }
+
+        if (fileList == null || fileList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "There is no backup file yet!");
+            return;
+        }
+
+        DefaultListModel<String> fileListOnlyNames = new DefaultListModel<>();
+        for (String s : fileList) {
+            fileListOnlyNames.addElement((new File(s)).getName());
+        }
+        
+        FileBackupDialog dialog = new FileBackupDialog(this, true);
+        dialog.jList1.setModel(fileListOnlyNames);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButtonShowFileBackupsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonLoad;
     private javax.swing.JButton jButtonNew;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSaveAs;
+    private javax.swing.JButton jButtonShowFileBackups;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaMain;
     // End of variables declaration//GEN-END:variables
