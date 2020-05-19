@@ -4,7 +4,6 @@ import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,11 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -25,9 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 
 public class Main extends javax.swing.JFrame {
@@ -186,6 +180,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     public static void main(String[] args) {
+        Splash splash = new Splash(null, true);
+        splash.setVisible(true);
+        
         Main gui = new Main();
 
         Thread spellCheckerThread = new Thread(new SpellCheckerThread(gui));
@@ -193,6 +190,7 @@ public class Main extends javax.swing.JFrame {
 
         AutoSaveJob autoSaveJob = new AutoSaveJob(gui);
         autoSaveJob.start();
+        
         
         gui.setVisible(true);
 
